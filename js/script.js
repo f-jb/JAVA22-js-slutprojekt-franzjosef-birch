@@ -22,7 +22,7 @@ class Model {
   getCurrentPage() {
     return this.#page;
   }
-  async getResults(searchQuery) {
+  getResults(searchQuery) {
     this.#url = `${this.#baseURL}?method=flickr.photos.search&api_key=${
       this.#key
     }&text=${searchQuery.term}&per_page=${
@@ -30,13 +30,12 @@ class Model {
     }&page=${this.getCurrentPage()}&sort=${
       searchQuery.sort
     }&format=json&nojsoncallback=1`;
-    await fetch(this.#url, {
+    fetch(this.#url, {
       mode: "cors",
     })
       .then((response) => response.json())
       .then((searchResults) => app.displayResults(searchResults.photos))
       .catch((error) => app.view.setStatus(error.message));
-    return this.searchResults;
   }
 }
 
@@ -114,11 +113,7 @@ class View {
   displayResults(photos) {
     this.cleanResultsView();
 
-    for (
-      let i = 0;
-      i < (photos.perpage > photos.total ? photos.total : photos.perpage);
-      i++
-    ) {
+    for (let i = 0; i < photos.photo.length; i++) {
       const img = document.createElement("img");
       const photo = photos.photo[i];
       const photoSize = document.getElementById("size").value;
