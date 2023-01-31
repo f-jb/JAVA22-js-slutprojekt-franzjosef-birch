@@ -1,0 +1,12 @@
+nav {
+  display: none;
+}
+
+#resultView {
+  display: flex;
+  flex-flow: row wrap;
+}
+#resultView > img {
+  margin: 2px;
+  align-self: center;
+}

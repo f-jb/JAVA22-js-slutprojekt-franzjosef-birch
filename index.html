@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>flickr stuff</title>
+    <script src="js/script.js" defer></script>
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <form>
+      <input type="text" id="searchQuery" />
+      <select id="size">
+        <option value="_t">Thumbnail</option>
+        <option value="">Medium</option>
+        <option value="_b">Large</option>
+      </select>
+      <select id="perPage">
+        <option value="10">10</option>
+        <option value="25">25</option>
+        <option value="50">50</option>
+        <option value="100">100</option>
+      </select>
+      <select id="sort">
+        <option value="date-posted-desc">Date posted (Descending)</option>
+        <option value="interestingness-desc">
+          Interestingness (Descending)
+        </option>
+        <option value="relevance">Relevance</option>
+      </select>
+      <button id="search">Search</button>
+    </form>
+    <section id="resultView"></section>
+    <p id="statusView"></p>
+    <nav id="nav">
+      <button id="previous">previous</button><button id="next">next</button>
+    </nav>
+  </body>
+</html>
