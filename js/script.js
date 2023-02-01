@@ -34,6 +34,12 @@ class Model {
     fetch(this.#url, {
       mode: "cors",
     })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not OK");
+        }
+        return response;
+      })
       .then((response) => response.json())
       .then((searchResults) => app.displayResults(searchResults))
       .catch((error) => app.view.setStatus(error.message));
@@ -167,7 +173,7 @@ class Controller {
 
   displayResults(searchResults) {
     console.log(searchResults);
-      app.view.displayResults(searchResults);
+    app.view.displayResults(searchResults);
   }
 
   search(e) {
