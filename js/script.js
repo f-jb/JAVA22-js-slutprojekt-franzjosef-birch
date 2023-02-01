@@ -115,6 +115,9 @@ class View {
     this.cleanResultsView();
     if (searchResults.stat === "fail") {
       this.setStatus(searchResults.message);
+    } else if (searchResults.photos.total === 0) {
+      app.view.cleanResultsView();
+      app.view.setStatus("No results found");
     } else {
       const photos = searchResults.photos;
       for (let i = 0; i < photos.photo.length; i++) {
@@ -163,12 +166,8 @@ class Controller {
   }
 
   displayResults(searchResults) {
-    if (searchResults.total === 0) {
-      app.view.cleanResultsView();
-      app.view.setStatus("No results found");
-    } else {
+    console.log(searchResults);
       app.view.displayResults(searchResults);
-    }
   }
 
   search(e) {
