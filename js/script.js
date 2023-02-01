@@ -30,11 +30,12 @@ class Model {
     }&page=${this.getCurrentPage()}&sort=${
       searchQuery.sort
     }&format=json&nojsoncallback=1`;
+
     fetch(this.#url, {
       mode: "cors",
     })
       .then((response) => response.json())
-      .then((searchResults) => app.displayResults(searchResults.photos))
+      .then((searchResults) => app.displayResults(searchResults))
       .catch((error) => app.view.setStatus(error.message));
   }
 }
@@ -110,16 +111,36 @@ class View {
   getResultView() {
     return this.#resultView;
   }
-  displayResults(photos) {
+  displayResults(searchResults) {
     this.cleanResultsView();
+    if (searchResults.stat === "fail") {
+      this.setStatus(searchResults.message);
+    } else {
+      const photos = searchResults.photos;
+      for (let i = 0; i < photos.photo.length; i++) {
+        const img = document.createElement("img");
+        const photo = photos.photo[i];
+        const photoSize = document.getElementById("size").value;
+        img.src = `https://live.staticflickr.com/${photo.server}/${photo.id}_${photo.secret}${photoSize}.jpg`;
 
-    for (let i = 0; i < photos.photo.length; i++) {
-      const img = document.createElement("img");
-      const photo = photos.photo[i];
-      const photoSize = document.getElementById("size").value;
-      img.src = `https://live.staticflickr.com/${photo.server}/${photo.id}_${photo.secret}${photoSize}.jpg`;
-
-      this.#resultView.appendChild(img);
+        this.#resultView.appendChild(img);
+      }
+      this.setStatus(`Page ${app.model.getCurrentPage()} of ${photos.pages}`);
+      if (photos.total > photos.perpage) {
+        this.enableNav();
+        if (photos.page === 1) {
+          this.disablePreviousButton();
+        } else {
+          this.enablePreviousButton();
+        }
+        if (photos.page === photos.pages) {
+          this.disableNextButton();
+        } else {
+          this.enableNextButton();
+        }
+      } else {
+        this.disableNav();
+      }
     }
   }
 }
@@ -147,24 +168,6 @@ class Controller {
       app.view.setStatus("No results found");
     } else {
       app.view.displayResults(searchResults);
-      app.view.setStatus(
-        `Page ${app.model.getCurrentPage()} of ${searchResults.pages}`
-      );
-      if (searchResults.total > searchResults.perpage) {
-        app.view.enableNav();
-        if (searchResults.page === 1) {
-          app.view.disablePreviousButton();
-        } else {
-          app.view.enablePreviousButton();
-        }
-        if (searchResults.page === searchResults.pages) {
-          app.view.disableNextButton();
-        } else {
-          app.view.enableNextButton();
-        }
-      } else {
-        app.view.disableNav();
-      }
     }
   }
 
