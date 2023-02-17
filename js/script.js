@@ -1,5 +1,19 @@
 "use strict";
 
+// This file follows the MVC design pattern.
+// Model - Strictly application logic, manages the data.
+// View - Enables showing the data.
+// Controller - An interface between the model and the controller
+//
+// By using this design pattern a couple of the design principles behind
+// Object Oriented Programming is achieved. Mainly the Single responsibility 
+// principle (SRP)that dictates that a class should only have one area of
+// responsibilty.
+//
+// Since the model and view is decoupled it is easier to create another form of
+// view i.e. a desktop application.
+//
+
 class Model {
   #page = 1;
   #baseURL;
@@ -8,7 +22,9 @@ class Model {
 
   constructor() {
     this.#baseURL = "https://api.flickr.com/services/rest/";
-    this.#key = "90dd63c6012cc6ab2e71337f54b9f7fe";
+//    this.#key = "90dd63c6012cc6ab2e71337f54b9f7fe";
+    this.#key = "b27ddda6e47cfadb978ebfa12c4628bf";
+
   }
   increasePage() {
     this.#page++;
