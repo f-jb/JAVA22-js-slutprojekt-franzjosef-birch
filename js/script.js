@@ -29,6 +29,7 @@ class Model {
     this.#key = "b27ddda6e47cfadb978ebfa12c4628bf";
 
   }
+  // Page manipulation
   increasePage() {
     this.#page++;
   }
@@ -41,6 +42,8 @@ class Model {
   getCurrentPage() {
     return this.#page;
   }
+
+  // Search result getter and first result validation
   getResults(searchQuery) {
     this.#url = `${this.#baseURL}?method=flickr.photos.search&api_key=${
       this.#key
@@ -87,6 +90,8 @@ class View {
     this.#perPage = document.getElementById("perPage");
     this.#sort = document.getElementById("sort");
   }
+
+  // Button manipulation
   getSearchButton() {
     return this.#searchButton;
   }
@@ -114,6 +119,9 @@ class View {
   disableNav() {
     this.#nav.style.display = "none";
   }
+
+
+  // Information getting and setting
   getSearchQuery() {
     const searchQuery = {
       term: this.#searchTerms.value,
@@ -191,7 +199,6 @@ class Controller {
   }
 
   displayResults(searchResults) {
-    console.log(searchResults);
     app.view.displayResults(searchResults);
   }
 
