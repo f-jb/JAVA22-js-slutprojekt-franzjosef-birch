@@ -1,5 +1,4 @@
 *~
 js/ts
 js/alternativeVersions
-.gitignore
-.eslintrc.js
+.*

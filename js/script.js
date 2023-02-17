@@ -2,12 +2,15 @@
 
 // This file follows the MVC design pattern.
 // Model - Strictly application logic, manages the data.
-// View - Enables showing the data.
-// Controller - An interface between the model and the controller
+// View - Responsible for the view that the user sees.
+// Controller - A controller that interfaces between the model and the controller
+//
+// This is tied together with:
+// const app = new Controller(new Model(), new View());
 //
 // By using this design pattern a couple of the design principles behind
 // Object Oriented Programming is achieved. Mainly the Single responsibility 
-// principle (SRP)that dictates that a class should only have one area of
+// principle (SRP) that dictates that a class should only have one area of
 // responsibilty.
 //
 // Since the model and view is decoupled it is easier to create another form of
