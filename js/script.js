@@ -25,11 +25,10 @@ class Model {
 
   constructor() {
     this.#baseURL = "https://api.flickr.com/services/rest/";
-//    this.#key = "90dd63c6012cc6ab2e71337f54b9f7fe";
-    this.#key = "b27ddda6e47cfadb978ebfa12c4628bf";
+    this.#key = "90dd63c6012cc6ab2e71337f54b9f7fe";
 
   }
-  // Page manipulation
+  // internal tracking of which page the user is currently browsing, used as a parameter in the request to flickr
   increasePage() {
     this.#page++;
   }
@@ -43,7 +42,7 @@ class Model {
     return this.#page;
   }
 
-  // Search result getter and first result validation
+  // builds the requestURL then gets a response from flickr and validates it
   getResults(searchQuery) {
     this.#url = `${this.#baseURL}?method=flickr.photos.search&api_key=${
       this.#key
@@ -91,7 +90,6 @@ class View {
     this.#sort = document.getElementById("sort");
   }
 
-  // Button manipulation
   getSearchButton() {
     return this.#searchButton;
   }
@@ -101,6 +99,8 @@ class View {
   getPreviousButton() {
     return this.#previousButton;
   }
+
+  // Enables disabling and enabling of the navigation buttons
   enableNextButton() {
     this.#nextButton.disabled = false;
   }
@@ -121,7 +121,7 @@ class View {
   }
 
 
-  // Information getting and setting
+  // Gets the terms written in the searchbar
   getSearchQuery() {
     const searchQuery = {
       term: this.#searchTerms.value,
@@ -131,11 +131,16 @@ class View {
     return searchQuery;
   }
 
+  // Shows a message in the statusView.
+
   setStatus(message) {
     this.messageText = document.createElement("p");
     this.messageText.innerText = message;
     this.#statusView.replaceChildren(this.messageText);
   }
+
+
+  // cleans upp the resultview, used to reset the results e.g. between page navigation or new searches.
   cleanResultsView() {
     while (this.#resultView.firstChild) {
       this.#resultView.removeChild(this.#resultView.firstChild);
@@ -144,13 +149,23 @@ class View {
   getResultView() {
     return this.#resultView;
   }
+
+
+
   displayResults(searchResults) {
+
+    // resets the resultView
     this.cleanResultsView();
+
+    // validates the results 
     if (searchResults.stat === "fail") {
       this.setStatus(searchResults.message);
+
     } else if (searchResults.photos.total === 0) {
       app.view.cleanResultsView();
       app.view.setStatus("No results found");
+
+      // if the results are valid, gets the photo URL and adds it as an element to the resultView
     } else {
       const photos = searchResults.photos;
       for (let i = 0; i < photos.photo.length; i++) {
@@ -161,6 +176,9 @@ class View {
 
         this.#resultView.appendChild(img);
       }
+
+      // shows how many pages of results are available and enables nav-button depending
+      // on if there are more than one, no previous pages or no next pages
       this.setStatus(`Page ${app.model.getCurrentPage()} of ${photos.pages}`);
       if (photos.total > photos.perpage) {
         this.enableNav();
@@ -188,6 +206,7 @@ class Controller {
   constructor(model, view) {
     this.model = model;
     this.view = view;
+    // sets up the actionlisteners for the buttons and resultView, all are gotten from View.
     view.getSearchButton().addEventListener("click", this.search);
     view.getNextButtion().addEventListener("click", this.nextPage);
     view.getPreviousButton().addEventListener("click", this.previousPage);
@@ -203,17 +222,20 @@ class Controller {
   }
 
   search(e) {
+    // checks if the search is initiated by the search button
     if (e.target.id === "search") {
       app.model.resetPage();
     }
     e.preventDefault();
     const searchQuery = app.view.getSearchQuery();
     if (searchQuery.term === "") {
-      app.view.setStatus("please enter a search term");
+      app.view.setStatus("Please enter a search term");
     } else {
       app.model.getResults(searchQuery);
     }
   }
+
+  // increases or decreases the current page in model, which enables browsing the results
   nextPage(e) {
     e.preventDefault();
     app.model.increasePage();
